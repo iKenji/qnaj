@@ -1,0 +1,78 @@
+/* --- q --- */
+@media (min-width: 768px) {
+  .masthead {
+    position: static !important;
+  }
+  .mastfoot {
+    position: static !important;
+  }
+}
+
+body .q {
+  background: #fff !important;
+  color: #4e4e4e;
+  border: 2px solid #333;
+  border-radius: 20px;
+}
+
+body .q div.masthead {
+  background: #fff !important;
+}
+
+.glyphicon.glyphicon-refresh {
+    color: #000;
+    font-size: 40px;
+    margin-right: 5%;
+}
+
+.q {
+  padding: 10px;
+}
+
+.q .q_current {
+  background: #9682B4;
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+}
+.q .p_div {
+  border: 1px solid #000;
+}
+
+.q .p_name {
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.q .p_content {
+  background: #EEEEEE;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 5px;
+}
+
+.q .color_div_b {
+  background: #448AFF;
+  border-radius: 20px 0px 0px 20px;
+  height: 15px;
+  float: left;
+  width: 50%;
+  cursor: pointer;
+}
+.q .color_div_r {
+  background: #EE6559;
+  border-radius: 0px 20px 20px 0px;
+  height: 15px;
+  width: 50%;
+  margin-left: auto;
+  margin-right: 0px;
+  cursor: pointer;
+}
+
+.a .p_content.pub_b {
+  background: #B2D7FE !important;
+}
+
+.a .p_content.pub_r {
+  background: #E85661 !important;
+}
