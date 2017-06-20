@@ -1,0 +1,14 @@
+{
+  "name":        "production",
+  "description": "production",
+  "chef_type":   "environment",
+  "json_class":  "Chef::Environment",
+  "default_attributes": {
+    "user": "nginx",
+    "ruby-env": {
+      "user":    "nginx",
+      "group":   "nginx"
+    }
+  },
+  "override_attributes": {}
+}
