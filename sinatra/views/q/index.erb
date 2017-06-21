@@ -1,7 +1,7 @@
 <div class="q">
   <h3>
       Welcome <%= @name %> !  <a target="qr" href="/q/qr/<%= @q_hash %>">
-      <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span>
+          <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span></a>
   </h3>
 
   <div class="text-right">
@@ -15,8 +15,9 @@
   <p id="q_current" class="q_current">※質問リストから選択してください。<p>
   <hr>
   <h4>回答リスト</h4>
+  <p>色を選択して全員に公開</p>
   <!-- Example row of columns -->
-  <div id="ans_list" class="row">まだ回答はありません</div>
+  <div id="ans_list" class="row">※まだ回答はありません</div>
   <hr>
   <h4>質問リスト</h4>
   <div id="q_list"></div>
