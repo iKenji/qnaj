@@ -83,8 +83,6 @@ class App < Sinatra::Base
       redirect '/q/login'
     end
 
-    question = Question.find_by(q_user_id: session[:q_user_id], public: true)
-
     @q_user_id = session[:q_user_id]
     @name = session[:name]
     @q_hash = session[:q_hash]
@@ -124,7 +122,6 @@ class App < Sinatra::Base
         session[:q_user_id] = qUser.id
         session[:name] = params[:name]
         session[:q_hash] = qHash
-
 
         questions = Question.where(q_user_id: session[:q_user_id])
         chkUpdate = questions.update_all(public: false)
@@ -183,6 +180,9 @@ class App < Sinatra::Base
     # TODO: security csrf
     @title = 'A'
     @q_hash = params[:q_hash]
+    if (session[:a_user_id].nil?)
+      redirect '/a/login/' + session[:q_hash]
+    end
     @a_user = AUser.find(session[:a_user_id])
     @q_user = QUser.find_by(q_hash: params[:q_hash])
 

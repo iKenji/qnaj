@@ -56,10 +56,15 @@ function getAList(qId){
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
         var res = xhr.response
+        if (is_null(res)
         var fragment = document.createDocumentFragment();
         var aList = document.querySelector('#ans_list');
 
         while (child = aList.lastChild) aList.removeChild(child);
+        if (!!!res) {
+          alert('セッションが切れました。ログインし直してください。');
+          location.reload();
+        }
         if (0 < res.length) {
           for (var i = 0; i < res.length; i++ ) {
             var aDiv = document.createElement('div');
@@ -153,6 +158,10 @@ function getQList() {
         var qList = document.querySelector('#q_list');
         while (child = qList.lastChild) qList.removeChild(child);
 
+        if (!!!res) {
+          alert('セッションが切れました。ログインし直してください。');
+          location.reload();
+        }
         if (0 < res.length) {
           for (var i = 0; i < res.length; i++ ) {
             var qDiv = document.createElement('div');
