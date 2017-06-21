@@ -1,0 +1,17 @@
+  <div style="text-align:center;margin:30px;">
+    <div id="alink"></div>
+    <input id="url" type="text" readonly="readonly" style="text-align:center; font-size:200%; margin-top:30px;" value="<%= @short_url %>">
+    <button class="btn" data-clipboard-target="#url">
+      <span class="glyphicon glyphicon-tags" aria-hidden="true"></span>
+    </button>
+  </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  $("#alink").qrcode({text:"<%= @short_url %>"});
+  var clipboard = new Clipboard('.btn');
+  console.log(clipboard);
+  clipboard.on('success', function(e) {
+      e.clearSelection();
+  });
+});
+</script>

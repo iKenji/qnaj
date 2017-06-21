@@ -5,7 +5,7 @@ USE qnaj;
 -- 質問者
 CREATE TABLE IF NOT EXISTS qnaj.q_users (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  password VARCHAR(255) NOT NULL,
+  password_digest VARCHAR(255) NOT NULL,
   q_hash VARCHAR(255) NOT NULL,
   name VARCHAR(255) NOT NULL,
   created_at DATETIME NOT NULL,

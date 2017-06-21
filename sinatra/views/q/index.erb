@@ -1,253 +1,29 @@
-<a href="<%= url %>">url</a>
 <div class="q">
-  <h3>Welcome <%= @name %> !</h3>
+  <h3>
+      Welcome <%= @name %> !  <a target="qr" href="/q/qr/<%= @q_hash %>">
+      <span class="glyphicon glyphicon-qrcode" aria-hidden="true"></span>
+  </h3>
+
   <div class="text-right">
       <a href="#">
           <span class="glyphicon glyphicon-refresh" onclick="refresh()"></span>
       </a>
   </div>
 
-  <% url = "http://192.168.33.33/a/login/"+@q_hash %>
-  <h4>LINK</h4>
-  <p><a href="<%= url %>">url</a></p>
-  <div id="alink" style="display:none"></div>
-  <button onclick="qr()">QRコード</button>
-  <script>function qr() { document.getElementById("alink").style.display="block" } 
-  </script>
-  <hr>
-
-  <h4>--- Questions ---</h4>
+  <h4>公開中の質問</h4>
   <!-- TODO: public trueを表示する -->
-  <p id="q_current" class="q_current text-left"><p>
+  <p id="q_current" class="q_current">※質問リストから選択してください。<p>
   <hr>
-  <h4>--- Answers ---</h4>
+  <h4>回答リスト</h4>
   <!-- Example row of columns -->
-  <div id="ans_list" class="row"></div>
-  <h4>--- List ---</h4>
+  <div id="ans_list" class="row">まだ回答はありません</div>
+  <hr>
+  <h4>質問リスト</h4>
   <div id="q_list"></div>
-  <h4>--- Add ---</h4>
   <form name="addform">
     <input type="hidden" name="q_user_id" value="<%= @q_user_id %>">
-    <textarea name="content" placeholder="空白では送信できません。" rows="3" class="form-control" id="InputTextarea"></textarea>
-    <button type="button" name="submit" class="btn btn-primary" onclick="ajaxPostQ()">送信</button>
+    <textarea id="q_text_area" name="content" placeholder="※改行は使えません" rows="3" class="form-control" id="InputTextarea"></textarea>
+    <button id="add_q" type="button" name="submit" class="btn btn-primary" onclick="ajaxPostQ()">追加</button>
     <span id="add_status"></span>
   </form>
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  $("#alink").qrcode({text:"<%= url %>"});
-  getQList();
-  polling();
-});
-
-function refresh() {
-/*
-  getQList();
-  getAList(qId);
-*/
-  getAList(28);
-}
-
-// polling
-function polling() {
-  var radioList = document.getElementsByName("q_radio");
-  setInterval(function() { 
-    for (var i = 0; i < radioList.length; i++){
-      if (radioList[i].checked) {
-        var cur = document.getElementById('q_current');
-        cur.innerHTML = radioList[i].value;
-        qId = radioList[i].id.replace(/[^0-9^\.]/g,"")
-        break;
-      }
-    }
-    if (typeof qId !== "undefined") {
-      getAList(qId);
-    }
-  }, 1000);
-}
-
-function xhr_request(method, url, synchro) {
-  var xhr = new XMLHttpRequest();
-  xhr.open(method, url, synchro);
-  xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
-  xhr.responseType = "json";
-  return xhr;
-}
-
-function chCol(d, color) {
-  var aId = d.id.replace(/[^0-9^\.]/g,"")
-  updateA(aId, color);
-}
-
-function getAList(qId){
-  var xhr = xhr_request("GET", "/a/list/" + qId, true);
-  xhr.onload = function (event) {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        var res = xhr.response
-        var fragment = document.createDocumentFragment();
-        var aList = document.querySelector('#ans_list');
-
-        while (child = aList.lastChild) aList.removeChild(child);
-
-        for (var i = 0; i < res.length; i++ ) {
-          var aDiv = document.createElement('div');
-          var pName = document.createElement('p');
-          var pContent = document.createElement('p');
-          var colorDivB = document.createElement('div');
-          var colorDivR = document.createElement('div');
-
-          aDiv.id = ("a_div_" + res[i].id);
-          aDiv.classList.add("col-md-4");
-
-          pName.classList.add("text-left");
-          pName.classList.add("p_name");
-          pName.appendChild(document.createTextNode(res[i].name));
-
-          pContent.classList.add("text-left");
-          pContent.classList.add("p_content");
-          if (res[i].public) {
-              console.log(res[i].public_type);
-            pContent.classList.add((res[i].public_type == 1)? "pub_b" : "pub_r");
-          }
-          console.log(pContent);
-
-          pContent.appendChild(document.createTextNode(res[i].content));
-
-          console.log(res[i].id);
-          colorDivB.id = ("q_color_" + res[i].id);
-          colorDivB.classList.add("color_div_b");
-          colorDivB.onclick = function() {
-              chCol(this, "B");
-          }
-          colorDivR.id = ("q_color_" + res[i].id);
-          colorDivR.classList.add("color_div_r");
-          colorDivR.onclick = function() {
-              chCol(this, "R");
-          }
-
-
-          aDiv.appendChild(pName);
-          aDiv.appendChild(pContent);
-          aDiv.appendChild(colorDivB);
-          aDiv.appendChild(colorDivR);
-          fragment.appendChild(aDiv);
-        }
-        aList.appendChild(fragment);
-
-      } else {
-        console.log('response failed');
-      }
-    }
-  }
-  xhr.send(null);
-}
-
-
-function displayCurrentQ() {
-  var radioList = document.getElementsByName("q_radio");
-  for (var i = 0; i < radioList.length; i++){
-    if (radioList[i].checked) {
-      cur = document.getElementById('q_current');
-      cur.innerHTML = radioList[i].value;
-      qId = radioList[i].id.replace(/[^0-9^\.]/g,"")
-      updateQ(qId);
-      getAList(qId);
-      break;
-    }
-  }
-}
-
-function updateA(checkedAId, color) {
-  var xhr = xhr_request("POST", "/a/update", true);
-  // TODO: refactoring
-  var aParam = "a_id=" + encodeURIComponent(checkedAId);
-  aParam += "&color=" + encodeURIComponent(color);
-  xhr.send(aParam);
-}
-
-function updateQ(checkedQId) {
-  var xhr = xhr_request("POST", "/q/update", true);
-  // TODO: refactoring
-  var qParam = "q_id=" + encodeURIComponent(checkedQId);
-  xhr.send(qParam);
-}
-
-function getQList() {
-  var xhr = xhr_request("GET", "/q/list/<%= @q_hash %>", true);
-  xhr.onload = function (event) {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) {
-        var res = xhr.response;
-        var fragment = document.createDocumentFragment();
-        var qList = document.querySelector('#q_list');
-        while (child = qList.lastChild) qDiv.removeChild(child);
-
-        for (var i = 0; i < res.length; i++ ) {
-          var qDiv = document.createElement('div');
-          var qLabel = document.createElement('label');
-          var qRadio = document.createElement('input');
-          qDiv.id = "q_list" + res[i].id;
-          qDiv.classList.add("col-md-12");
-          qDiv.classList.add("text-left");
-
-          qLabel.classList.add("radio-inline");
-
-          qRadio.type = "radio";
-          qRadio.id = "q_radio_" + res[i].id;
-          qRadio.name = "q_radio";
-          qRadio.class = "list_radio";
-          qRadio.value = res[i].content;
-          qRadio.onclick = function() {
-              displayCurrentQ()
-          }
-
-          qLabel.appendChild(qRadio);
-          qLabel.appendChild(document.createTextNode(res[i].content));
-          qDiv.appendChild(qLabel);
-
-          fragment.appendChild(qDiv);
-        }
-
-        qList.appendChild(fragment);
-      } else {
-        console.log('response failed');
-      }
-    }
-  }
-  xhr.responseType = "json";
-  xhr.send(null);
-}
-
-function ajaxPostQ() {
-  var xhr = xhr_request("POST", "/q/reg", true);
-
-  // TODO: refactoring
-  var qParam = "q_user_id=" + encodeURIComponent(document.addform.q_user_id.value);
-  qParam += "&content=" + encodeURIComponent(document.addform.content.value);
-  xhr.send(qParam);
-
-  xhr.onreadystatechange = function() {
-    var addStatus = document.getElementById('add_status');
-    if (xhr.readyState == 4) {
-      if (xhr.status == 200) {
-        addStatus.classList.remove("text-danger");
-        addStatus.classList.remove("text-muted");
-        addStatus.classList.add("text-success");
-        addStatus.innerHTML = "success!!";
-        getQList();
-      }
-    } else if(xhr.status == 500) {
-      addStatus.classList.remove("text-success");
-      addStatus.classList.remove("text-muted");
-      addStatus.classList.add("text-danger");
-      addStatus.innerHTML = "failed!"
-    } else {
-      addStatus.classList.remove("text-muted");
-      addStatus.classList.remove("text-danger");
-      addStatus.classList.add("text-muted");
-      addStatus.innerHTML = "connecting..."
-    }
-  }
-}
-</script>

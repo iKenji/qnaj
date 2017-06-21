@@ -2,8 +2,8 @@
   <form action="/q/login" method="POST">
     <h2 class="form-signin-heading"><span class="glyphicon glyphicon-log-in"></span></h2>
     <p>
-      Success <span class="glyphicon glyphicon-arrow-right"></span> Sign In, <br>
-      Failed <span class="glyphicon glyphicon-arrow-right"></span> Sign Up
+      Success <span class="glyphicon glyphicon-arrow-right"></span> ログイン<br>
+      Failed <span class="glyphicon glyphicon-arrow-right"></span> 新規登録
     </p>
 <% if @error %>
     <div class="alert alert-danger">
@@ -14,6 +14,6 @@
     <input type="text" id="inputText" class="form-control" name="name" placeholder="name" required autofocus>
     <label for="inputPassword" class="sr-only">Password</label>
     <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
-    <button class="btn btn-lg btn-primary btn-block" type="submit"><span class="glyphicon glyphicon-save"></span> Submit</button>
+    <button class="btn btn-lg btn-primary btn-block" type="submit"><span class="glyphicon glyphicon-save"></span> 送信</button>
   </form>
 </div>

@@ -29,6 +29,10 @@ body .q div.masthead {
   padding: 10px;
 }
 
+.glyphicon.glyphicon-qrcode {
+  color: #9682B4;
+}
+
 .q .q_current {
   background: #9682B4;
   color: #fff;
@@ -57,7 +61,6 @@ body .q div.masthead {
   height: 15px;
   float: left;
   width: 50%;
-  cursor: pointer;
 }
 .q .color_div_r {
   background: #EE6559;
@@ -66,13 +69,12 @@ body .q div.masthead {
   width: 50%;
   margin-left: auto;
   margin-right: 0px;
-  cursor: pointer;
 }
 
-.a .p_content.pub_b {
+.q .p_content.pub_b {
   background: #B2D7FE !important;
 }
 
-.a .p_content.pub_r {
+.q .p_content.pub_r {
   background: #E85661 !important;
 }

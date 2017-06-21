@@ -2,10 +2,11 @@
 # /views	動的ファイル(erb)を配置する
 # app.rb	メインアプリケーション
 #
-require 'active_record'
-require 'mysql2'
 require 'sinatra'
 require 'sinatra/reloader'
+require 'active_record'
+require 'mysql2'
+require 'bitly'
 
 # DB設定ファイルの読み込み
 ActiveRecord::Base.configurations = YAML.load_file('config/database.yml')
@@ -14,6 +15,7 @@ ActiveRecord::Base.logger = Logger.new("log/sql.log")
 
 class QUser < ActiveRecord::Base
   has_many :Question
+  has_secure_password
 
   validates_presence_of :name
   validates_presence_of :password
@@ -46,6 +48,17 @@ class App < Sinatra::Base
 
   enable :sessions
 
+  helpers do
+    def bitly_shorten(url)
+      Bitly.use_api_version_3
+      Bitly.configure do |config|
+        config.api_version = 3
+        config.access_token = ""
+      end
+      Bitly.client.shorten(url).short_url
+    end
+  end
+
   get '/' do
     @title = 'Top'
     @top = true
@@ -53,12 +66,23 @@ class App < Sinatra::Base
   end
 
   # ------------ Questioner --------------
+  get '/q/qr/:q_hash' do
+      url = "https://qnaj.xyz/"
+    @q = true
+    @short_url = bitly_shorten url + "a/login/" + params[:q_hash]
+    erb :'q/qr', :layout => :none
+  end
+
   get '/q' do
     @q = true
     @title = 'Q'
     if (session[:q_user_id].nil?)
       redirect '/q/login'
     end
+
+    question = Question.find_by(q_user_id: session[:q_user_id], public: true)
+    p question 
+
     @q_user_id = session[:q_user_id]
     @name = session[:name]
     @q_hash = session[:q_hash]
@@ -73,11 +97,10 @@ class App < Sinatra::Base
   post '/q/login' do
     @title = 'Q Login'
 
-    # TODO: password hash
     user = QUser.find_by(name: params[:name])
 
     session[:a_user_id] = nil
-    if (!user.nil? && user.password === params[:password])
+    if (!user.nil? && user.authenticate(params[:password]))
       # login success
       session[:q_user_id] = user.id
       session[:name] = user.name
@@ -89,6 +112,7 @@ class App < Sinatra::Base
       qUser = QUser.new(
         name: params[:name],
         password: params[:password],
+        password_confirmation: params[:password],
         q_hash: qHash
       )
       if (qUser.save)
@@ -219,7 +243,6 @@ class App < Sinatra::Base
   end
 
   post '/a/login' do
-    # TODO: password hash
     qUser = QUser.find_by(q_hash: params[:q_hash])
     aUser = AUser.new(
       name: params[:name],

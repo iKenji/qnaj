@@ -30,8 +30,7 @@
               <nav>
                 <ul class="nav masthead-nav">
                   <li class="<% if !@top.nil? %>active<% end %>"><a href="/">Top</a></li>
-                  <li><a target="_blank" href="http://infonear.co.jp">Infonear</a></li>
-                  <li><a target="_blank" href="https://www.instagram.com/kenji_pub/">ichihashi</a></li>
+                  <li><a target="_blank" href="#">How to</a></li>
                 </ul>
               </nav>
             </div>
@@ -44,7 +43,7 @@
           <div class="mastfoot">
             <div class="inner">
               <p>© 2017- ichihashi_kenji@infonear.co.jp<br>
-              Powered by <a href="http://infonear.co.jp">Infonear Inc.</a></p>
+              Powered by <a target="_blank" href="http://infonear.co.jp">Infonear Inc.</a></p>
             </div>
           </div>
 
@@ -62,6 +61,12 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <!--<script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>-->
     <!--<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>-->
-    <script src="/js/jquery-qrcode/jquery.qrcode.min.js"></script>
+<% if !@q.nil? %>
+    <script>q_hash="<%= @q_hash %>"</script>
+    <script src="/js/q/q.js"></script>
+<% elsif !@a.nil? %>
+    <script>q_hash="<%= @q_hash %>"</script>
+    <script src="/js/a/a.js"></script>
+<% end %>
   </body>
 </html>
