@@ -70,7 +70,7 @@ class App < Sinatra::Base
 
   # ------------ Questioner --------------
   get '/q/qr/:q_hash' do
-      url = "https://qnaj.xyz/"
+    url = "https://qnaj.xyz/"
     @q = true
     @short_url = bitly_shorten url + "a/login/" + params[:q_hash]
     erb :'q/qr', :layout => :none
@@ -107,6 +107,9 @@ class App < Sinatra::Base
       session[:q_user_id] = user.id
       session[:name] = user.name
       session[:q_hash] = user.q_hash
+
+      questions = Question.where(q_user_id: session[:q_user_id])
+      chkUpdate = questions.update_all(public: false)
       redirect '/q'
     else
       # login failed
@@ -121,6 +124,10 @@ class App < Sinatra::Base
         session[:q_user_id] = qUser.id
         session[:name] = params[:name]
         session[:q_hash] = qHash
+
+
+        questions = Question.where(q_user_id: session[:q_user_id])
+        chkUpdate = questions.update_all(public: false)
         redirect '/q'
       end
     end

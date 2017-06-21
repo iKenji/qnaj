@@ -1,5 +1,5 @@
-# @app_path = '/home/vagrant/sinatra'
-@app_path = '/vagrant/sinatra'
+@app_path = '/home/nginx/qnaj/sinatra'
+# @app_path = '/vagrant/sinatra'
 
 worker_processes 2
 working_directory "#{@app_path}/"
@@ -12,8 +12,8 @@ preload_app true
 timeout 30
 # This is where we specify the socket.
 # We will point the upstream Nginx module to this socket later on
-# listen "#{@app_path}/tmp/unicorn.sock"
-listen "/var/run/unicorn.sock"
+listen "#{@app_path}/tmp/unicorn.sock"
+#listen "/var/run/unicorn.sock"
 pid "#{@app_path}/tmp/unicorn.pid"
 
 # Set the path of the log files inside the log folder of the testapp
