@@ -38,14 +38,17 @@ class Answer < ActiveRecord::Base
   validates_uniqueness_of :a_user_id, scope: :q_id
 end
 
-class AnswerDecorations < ActiveRecord::Base
-end
 
 class App < Sinatra::Base
   configure :development do
     register Sinatra::Reloader
   end
 
+  use Rack::Session::Cookie, :key => 'rack.session',
+                         :domain => 'qnaj.xyz',
+                         :path => '/',
+                         :expire_after => 86400, # In seconds
+                         :secret => 'super'
   enable :sessions
 
   helpers do
@@ -81,7 +84,6 @@ class App < Sinatra::Base
     end
 
     question = Question.find_by(q_user_id: session[:q_user_id], public: true)
-    p question 
 
     @q_user_id = session[:q_user_id]
     @name = session[:name]
@@ -227,7 +229,6 @@ class App < Sinatra::Base
     )
     answer.content = params[:content]
     answer.public = false
-    p answer
     if (answer.save)
       status 200
     else
