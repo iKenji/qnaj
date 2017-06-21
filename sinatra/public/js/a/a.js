@@ -14,12 +14,11 @@ function xhr_request(method, url, synchro) {
 function polling() {
   setInterval(function() { 
      getQ();
-     getA(false);
-     getA(true);
+     getA();
   }, 1000);
 }
 
-function getA(all) {
+function getA() {
   var q_id = document.getElementById('q_id').value;
   var xhr = xhr_request("GET", "/a/list/" + q_id, true);
   if (!q_id) {
