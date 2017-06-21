@@ -56,7 +56,6 @@ function getAList(qId){
     if (xhr.readyState === 4) {
       if (xhr.status === 200) {
         var res = xhr.response
-        if (is_null(res)
         var fragment = document.createDocumentFragment();
         var aList = document.querySelector('#ans_list');
 
